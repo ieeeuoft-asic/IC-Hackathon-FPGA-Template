@@ -23,6 +23,15 @@ jobs:
           --timing \
           -Mdir obj_dir_sv
         ./obj_dir_sv/Vtop
+        ./obj_dir_sv/Vtop | tee sim.log
+
+    - name: Upload simulation output
+      uses: actions/upload-artifact@v4
+      with:
+        name: sim-output
+        path: |
+          sim.log
+          obj_dir_sv/wave.vcd
 
 
     # # Option 2: Run C++ testbench

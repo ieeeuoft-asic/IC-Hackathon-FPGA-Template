@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module tb_top;
+module tb;
     logic a;
     logic b;
     logic c;
@@ -12,8 +12,14 @@ module tb_top;
         .c(c)
     );
 
+    initial begin
+        $dumpfile("wave.vcd");
+        $dumpvars(0, tb);
+    end
+
     // Clock not needed, just stimulus
     initial begin
+        
         // Print header
         $display("Time\t a b | c");
         $display("----------------");
