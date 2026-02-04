@@ -14,101 +14,57 @@ jobs:
   build-and-sim:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y verilator g++ make xvfb gtkwave
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y verilator g++ make python3-pip
+          pip3 install vcd2svg
 
-    - name: Run SV testbench
-      run: |
-        verilator -sv src/*.sv test/tb.sv \
-          --binary \
-          --trace \
-          --timing \
-          -Mdir obj_dir_sv
-        ./obj_dir_sv/Vtop | tee sim.log
+      - name: Run SV testbench
+        run: |
+          verilator -sv src/*.sv test/tb.sv \
+            --binary \
+            --trace \
+            --timing \
+            -Mdir obj_dir_sv
+          ./obj_dir_sv/Vtop | tee sim.log
 
-    - name: Save waveform to repo
-      run: |
-        mkdir -p outputs
-        mv obj_dir_sv/wave.vcd outputs/wave.vcd
+      - name: Save waveform to repo
+        run: |
+          mkdir -p outputs
+          mv obj_dir_sv/wave.vcd outputs/wave.vcd
 
-    - name: Generate waveform PNG (headless)
-      run: |
-        Xvfb :99 -screen 0 1920x1080x24 &
-        export DISPLAY=:99
-        gtkwave -a outputs/wave.vcd -o outputs/wave.png
+      - name: Generate waveform SVG (headless)
+        run: |
+          vcd2svg outputs/wave.vcd -o outputs/wave.svg
 
-    - name: Commit waveform
-      run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add outputs/wave.vcd
-        git commit -m "CI: update waveform (wave.vcd)" || echo "No changes to commit"
-        git push
+      - name: Commit waveform
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add outputs/wave.vcd
+          git commit -m "CI: update waveform (wave.vcd)" || echo "No changes to commit"
+          git push
 
-    - name: Upload simulation output
-      uses: actions/upload-artifact@v4
-      with:
-        name: sim-output
-        path: |
-          sim.log
-          outputs/wave.vcd
+      - name: Upload simulation output
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-output
+          path: |
+            sim.log
+            outputs/wave.vcd
+            outputs/wave.svg
 
-    - name: Write job summary
-      run: |
-        echo "## Verilator Simulation Results" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "- Simulation completed" >> $GITHUB_STEP_SUMMARY
-        echo "- Log file: \`sim.log\`" >> $GITHUB_STEP_SUMMARY
-        echo "- Waveform file: \`outputs/wave.vcd\`" >> $GITHUB_STEP_SUMMARY
-        echo "- Waveform preview image:" >> $GITHUB_STEP_SUMMARY
-        echo "![Waveform](outputs/wave.png)" >> $GITHUB_STEP_SUMMARY
-        echo "- Live Waveform Viewer (Surfer): https://app.surfer-project.org" >> $GITHUB_STEP_SUMMARY
-        echo "- Load waveform from this URL (in Surfer): https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/outputs/wave.vcd" >> $GITHUB_STEP_SUMMARY
-  # https://raw.githubusercontent.com/SattiDaBeaver/ASIC-Hackathon-Template/main/outputs/wave.vcd
-        
-
-  # Waveform Viewer
-  # viewer:
-  #   needs: build-and-sim
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     pages: write
-  #     id-token: write
-  #   steps:
-  #     - uses: actions/checkout@v3
-
-  #     - uses: actions/download-artifact@v4
-  #       with:
-  #         name: sim-output
-
-  #     - name: Prepare viewer
-  #       run: |
-  #         mkdir -p viewer
-  #         cp wave.vcd viewer/
-  #         cat > viewer/index.html << 'EOF'
-  #         <!DOCTYPE html>
-  #         <html>
-  #         <body style="margin:0">
-  #           <iframe
-  #             src="https://app.surfer-project.org/"
-  #             style="width:100vw;height:100vh;border:none">
-  #           </iframe>
-  #         </body>
-  #         </html>
-  #         EOF
-
-  #     - uses: actions/upload-pages-artifact@v3
-  #       with:
-  #         path: viewer
-
-  #     - uses: actions/deploy-pages@v4
-
-
-    # # Option 2: Run C++ testbench
-    # - name: Run C++ testbench
-    #   run: |
-    #     verilator src/*.sv --cc tb/sim_main.cpp --trace -Mdir obj_dir_cpp
-    #     make -C obj_dir_cpp -f Vtop_module.mk
-    #     ./obj_dir_cpp/Vtop_module
+      - name: Write job summary
+        run: |
+          echo "## Verilator Simulation Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Simulation completed" >> $GITHUB_STEP_SUMMARY
+          echo "- Log file: \`sim.log\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Waveform file: \`outputs/wave.vcd\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Waveform preview image:" >> $GITHUB_STEP_SUMMARY
+          echo "![Waveform](outputs/wave.svg)" >> $GITHUB_STEP_SUMMARY
+          echo "- Live Waveform Viewer (Surfer): https://app.surfer-project.org" >> $GITHUB_STEP_SUMMARY
+          echo "- Load waveform from this URL (in Surfer): https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/outputs/wave.vcd" >> $GITHUB_STEP_SUMMARY
