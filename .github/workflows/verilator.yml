@@ -58,16 +58,10 @@ jobs:
         echo "- Simulation completed" >> $GITHUB_STEP_SUMMARY
         echo "- Log file: \`sim.log\`" >> $GITHUB_STEP_SUMMARY
         echo "- Waveform file: \`outputs/wave.vcd\`" >> $GITHUB_STEP_SUMMARY
-      
-        # Split user/repo
-        GH_USER="${GITHUB_REPOSITORY%%/*}"
-        GH_REPO="${GITHUB_REPOSITORY##*/}"
-
-        # Surfer URL pointing to GitHub Pages (auto-published)
-        SURFER_URL="https://surfer-project.org/?url=https://${GH_USER}.github.io/${GH_REPO}/outputs/wave.vcd"
-
-        echo "- Live waveform (Surfer): $SURFER_URL" >> $GITHUB_STEP_SUMMARY
-  # https://app.surfer-project.org/?url=https://raw.githubusercontent.com/SattiDaBeaver/ASIC-Hackathon-Template/main/outputs/wave.vcd
+        echo "- Live Waveform Viewer (Surfer)\n: https://app.surfer-project.org" >> $GITHUB_STEP_SUMMARY
+        echo "- Load waveform from this URL (in Surfer)\n: https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/outputs/wave.vcd" >> $GITHUB_STEP_SUMMARY
+        
+  # https://raw.githubusercontent.com/SattiDaBeaver/ASIC-Hackathon-Template/main/outputs/wave.vcd
         
 
   # Waveform Viewer
