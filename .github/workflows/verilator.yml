@@ -58,7 +58,11 @@ jobs:
         echo "- Simulation completed" >> $GITHUB_STEP_SUMMARY
         echo "- Log file: \`sim.log\`" >> $GITHUB_STEP_SUMMARY
         echo "- Waveform file: \`outputs/wave.vcd\`" >> $GITHUB_STEP_SUMMARY
-        echo "- Live waveform (Surfer): https://raw.githubusercontent.com/<org>/<repo>/main/outputs/wave.vcd" >> $GITHUB_STEP_SUMMARY
+        RAW_URL="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/outputs/wave.vcd"
+        ENCODED_URL=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$RAW_URL', safe=''))")
+        echo "- Live waveform (Surfer): https://surfer-project.org/?url=$ENCODED_URL" >> $GITHUB_STEP_SUMMARY
+  # https://raw.githubusercontent.com/SattiDaBeaver/ASIC-Hackathon-Template/main/outputs/wave.vcd
+        
 
   # Waveform Viewer
   # viewer:
