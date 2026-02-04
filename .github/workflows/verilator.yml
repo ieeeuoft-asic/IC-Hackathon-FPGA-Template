@@ -14,57 +14,65 @@ jobs:
   build-and-sim:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y verilator g++ make python3-pip
-          pip3 install vcd2svg
+    # Install dependencies: Verilator + build tools
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y verilator g++ make curl
 
-      - name: Run SV testbench
-        run: |
-          verilator -sv src/*.sv test/tb.sv \
-            --binary \
-            --trace \
-            --timing \
-            -Mdir obj_dir_sv
-          ./obj_dir_sv/Vtop | tee sim.log
+    # Run your SystemVerilog testbench
+    - name: Run SV testbench
+      run: |
+        verilator -sv src/*.sv test/tb.sv \
+          --binary \
+          --trace \
+          --timing \
+          -Mdir obj_dir_sv
+        ./obj_dir_sv/Vtop | tee sim.log
 
-      - name: Save waveform to repo
-        run: |
-          mkdir -p outputs
-          mv obj_dir_sv/wave.vcd outputs/wave.vcd
+    # Save waveform to repo
+    - name: Save waveform to repo
+      run: |
+        mkdir -p outputs
+        mv obj_dir_sv/wave.vcd outputs/wave.vcd
 
-      - name: Generate waveform SVG (headless)
-        run: |
-          vcd2svg outputs/wave.vcd -o outputs/wave.svg
+    # Install vcd2svg and convert waveform
+    - name: Convert VCD to SVG
+      run: |
+        curl -L https://github.com/cksystemsteaching/vcd2svg/releases/latest/download/vcd2svg-linux-x64.tar.gz \
+          | tar xz -C /usr/local/bin
+        /usr/local/bin/vcd2svg outputs/wave.vcd -o outputs/wave.svg
 
-      - name: Commit waveform
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add outputs/wave.vcd
-          git commit -m "CI: update waveform (wave.vcd)" || echo "No changes to commit"
-          git push
+    # Commit waveform back to repo
+    - name: Commit waveform
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add outputs/wave.vcd outputs/wave.svg
+        git commit -m "CI: update waveform" || echo "No changes to commit"
+        git push
 
-      - name: Upload simulation output
-        uses: actions/upload-artifact@v4
-        with:
-          name: sim-output
-          path: |
-            sim.log
-            outputs/wave.vcd
-            outputs/wave.svg
+    # Upload simulation output as artifact
+    - name: Upload simulation output
+      uses: actions/upload-artifact@v4
+      with:
+        name: sim-output
+        path: |
+          sim.log
+          outputs/wave.vcd
+          outputs/wave.svg
 
-      - name: Write job summary
-        run: |
-          echo "## Verilator Simulation Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- Simulation completed" >> $GITHUB_STEP_SUMMARY
-          echo "- Log file: \`sim.log\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Waveform file: \`outputs/wave.vcd\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Waveform preview image:" >> $GITHUB_STEP_SUMMARY
-          echo "![Waveform](outputs/wave.svg)" >> $GITHUB_STEP_SUMMARY
-          echo "- Live Waveform Viewer (Surfer): https://app.surfer-project.org" >> $GITHUB_STEP_SUMMARY
-          echo "- Load waveform from this URL (in Surfer): https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/outputs/wave.vcd" >> $GITHUB_STEP_SUMMARY
+    # Write job summary with SVG preview
+    - name: Write job summary
+      run: |
+        echo "## Verilator Simulation Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- Simulation completed" >> $GITHUB_STEP_SUMMARY
+        echo "- Log file: \`sim.log\`" >> $GITHUB_STEP_SUMMARY
+        echo "- Waveform file: \`outputs/wave.vcd\`" >> $GITHUB_STEP_SUMMARY
+        echo "- Waveform preview image:" >> $GITHUB_STEP_SUMMARY
+        echo "![Waveform](outputs/wave.svg)" >> $GITHUB_STEP_SUMMARY
+        echo "- Live Waveform Viewer (Surfer): https://app.surfer-project.org" >> $GITHUB_STEP_SUMMARY
+        echo "- Load waveform from this URL (in Surfer): https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/outputs/wave.vcd" >> $GITHUB_STEP_SUMMARY
