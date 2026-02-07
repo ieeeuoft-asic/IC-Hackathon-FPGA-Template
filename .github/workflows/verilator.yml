@@ -40,10 +40,3 @@ jobs:
           sim.log
           obj_dir_sv/wave.vcd
 
-
-    # # Option 2: Run C++ testbench
-    # - name: Run C++ testbench
-    #   run: |
-    #     verilator src/*.sv --cc tb/sim_main.cpp --trace -Mdir obj_dir_cpp
-    #     make -C obj_dir_cpp -f Vtop_module.mk
-    #     ./obj_dir_cpp/Vtop_module
