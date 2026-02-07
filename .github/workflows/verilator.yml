@@ -3,12 +3,13 @@ name: Verilator CI
 on:
   push:
     branches: [ main ]
-    paths-ignore:
-      - outputs/wave.vcd   # prevent infinite loop
+    paths-ignore: # prevent infinite calls to github actions
+      - outputs/wave.vcd  
+      - outputs/sim.log
   pull_request:
 
-permissions:
-  contents: write   # REQUIRED to push back to repo
+permissions: # allow writes to repo
+  contents: write   #
 
 jobs:
   build-and-sim:
@@ -34,6 +35,7 @@ jobs:
       run: |
         mkdir -p outputs
         mv obj_dir_sv/wave.vcd outputs/wave.vcd
+        mv obj_dir_sv/sim.log outputs/sim.log
 
     - name: Commit waveform
       run: |
@@ -63,47 +65,3 @@ jobs:
         
   # https://raw.githubusercontent.com/SattiDaBeaver/ASIC-Hackathon-Template/main/outputs/wave.vcd
         
-
-  # Waveform Viewer
-  # viewer:
-  #   needs: build-and-sim
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     pages: write
-  #     id-token: write
-  #   steps:
-  #     - uses: actions/checkout@v3
-
-  #     - uses: actions/download-artifact@v4
-  #       with:
-  #         name: sim-output
-
-  #     - name: Prepare viewer
-  #       run: |
-  #         mkdir -p viewer
-  #         cp wave.vcd viewer/
-  #         cat > viewer/index.html << 'EOF'
-  #         <!DOCTYPE html>
-  #         <html>
-  #         <body style="margin:0">
-  #           <iframe
-  #             src="https://app.surfer-project.org/"
-  #             style="width:100vw;height:100vh;border:none">
-  #           </iframe>
-  #         </body>
-  #         </html>
-  #         EOF
-
-  #     - uses: actions/upload-pages-artifact@v3
-  #       with:
-  #         path: viewer
-
-  #     - uses: actions/deploy-pages@v4
-
-
-    # # Option 2: Run C++ testbench
-    # - name: Run C++ testbench
-    #   run: |
-    #     verilator src/*.sv --cc tb/sim_main.cpp --trace -Mdir obj_dir_cpp
-    #     make -C obj_dir_cpp -f Vtop_module.mk
-    #     ./obj_dir_cpp/Vtop_module
