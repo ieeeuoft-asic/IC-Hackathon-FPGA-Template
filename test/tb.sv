@@ -15,7 +15,7 @@ module tb;
     );
 
     initial begin
-        $dumpfile("obj_dir_sv/wave.vcd");
+        $dumpfile("sim_out/wave.vcd");
         $dumpvars(0, tb);
     end
 

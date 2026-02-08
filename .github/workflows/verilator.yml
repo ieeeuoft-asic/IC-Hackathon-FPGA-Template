@@ -1,8 +1,8 @@
-name: Verilator CI
+name: Simulation
 
 on:
   push:
-    branches: [ main, wavedrom ]
+    branches: [ main ]
     paths-ignore: # prevent infinite calls to github actions
       - outputs/**
   pull_request:
@@ -25,15 +25,15 @@ jobs:
           --binary \
           --trace \
           --timing \
-          -Mdir obj_dir_sv
+          -Mdir sim_out
         echo "------------------ Running testbench -------------------"
-        ./obj_dir_sv/Vtop | tee sim.log
+        ./sim_out/Vtop | tee sim.log
         echo "------------------- Test complete ----------------------"
 
     - name: Save waveform to repo
       run: |
         mkdir -p outputs
-        mv obj_dir_sv/wave.vcd outputs/wave.vcd
+        mv sim_out/wave.vcd outputs/wave.vcd
         mv sim.log outputs/sim.log
 
     - name: Generate WaveDrom JSON
