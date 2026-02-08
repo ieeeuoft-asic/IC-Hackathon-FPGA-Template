@@ -1,0 +1,22 @@
+{
+    "signal": [
+        {
+            "name": "TOP.tb.a",
+            "wave": "0.1.",
+            "data": []
+        },
+        {
+            "name": "TOP.tb.b",
+            "wave": "0101",
+            "data": []
+        },
+        {
+            "name": "TOP.tb.c",
+            "wave": "0..1",
+            "data": []
+        }
+    ],
+    "config": {
+        "hscale": 1
+    }
+}
