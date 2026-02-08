@@ -39,11 +39,10 @@ jobs:
     - name: Generate WaveDrom JSON
       run: |
         git clone https://github.com/Toroid-io/vcd2wavedrom 
-        cd vcd2wavedrom
         python3 -m pip install --upgrade pip
         python3 -m pip install vcdvcd
         python3 -m pip install .
-        python3 -m vcd2wavedrom.vcd2wavedrom -i ../outputs/wave.vcd -o ../outputs/wave.json
+        python3 -m vcd2wavedrom/vcd2wavedrom.vcd2wavedrom -i outputs/wave.vcd -o outputs/wave.json
 
     - name: Commit output folder
       if: github.event_name == 'push'
