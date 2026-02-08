@@ -44,6 +44,7 @@ jobs:
         python3 -m pip install vcdvcd
         python3 -m pip install .
         python3 -m vcd2wavedrom.vcd2wavedrom -i ../outputs/wave.vcd -o ../outputs/wave.json
+        cd ..
         npx wavedrom-cli -i outputs/wave.json > outputs/wave.svg
 
     - name: Commit output folder
