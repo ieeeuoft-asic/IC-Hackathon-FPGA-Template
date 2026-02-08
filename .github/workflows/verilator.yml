@@ -2,7 +2,7 @@ name: Verilator CI
 
 on:
   push:
-    branches: [ main, wave_test ]
+    branches: [ main, wavedrom ]
     paths-ignore: # prevent infinite calls to github actions
       - outputs/**
   pull_request:
