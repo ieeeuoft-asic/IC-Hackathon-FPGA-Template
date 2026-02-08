@@ -5,13 +5,15 @@ module tb;
     logic b;
     logic and_o;
     logic xor_o;
+    logic [2:0] and_or_xor;
 
     // Instantiate the AND gate
     top uut (
         .a(a),
         .b(b),
         .and_o(and_o),
-        .xor_o(xor_o)
+        .xor_o(xor_o),
+        .and_or_xor(and_or_xor)
     );
 
     initial begin
