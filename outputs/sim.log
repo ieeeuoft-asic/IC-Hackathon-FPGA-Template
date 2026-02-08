@@ -1,8 +1,12 @@
-Time	 a b | c
+Time	 a b | AND XOR
 ----------------
-10000	 0 0 | 0
-20000	 0 1 | 0
-30000	 1 0 | 0
-40000	 1 1 | 1
+100	 0 0 | 00
+200	 0 1 | 01
+300	 1 0 | 01
+400	 1 1 | 10
+500	 0 0 | 00
+600	 0 1 | 01
+700	 1 0 | 01
+800	 1 1 | 10
 Testbench finished!
-- test/tb.sv:34: Verilog $finish
+- test/tb.sv:40: Verilog $finish
