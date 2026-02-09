@@ -26,7 +26,7 @@ Go to your newly created repository and allow actions to create GitHub pages.
 
 ## Expected Repository Structure
 ```
-|
+│
 ├── src/            # ALL design source files (.v or .sv)
 │ ├── top.sv
 │ ├── module_a.v
@@ -35,13 +35,12 @@ Go to your newly created repository and allow actions to create GitHub pages.
 ├── test/
 │ └── tb.sv         # MUST be named exactly tb.sv
 │
-├── outputs/        # Auto-generated simulation outputs
-│
 ├── assets/         # Images for README
-|
+│
 ├── .github/
-│ └── workflows/    # GitHub Actions (do not modify)
-|
+│ ├── workflows/    # GitHub Actions (do not modify)
+│ └── outputs/      # Auto-generated simulation outputs
+│
 └── README.md
 ```
 
