@@ -21,7 +21,7 @@ jobs:
 
     - name: Run SV testbench
       run: |
-        verilator -sv src/*.sv test/tb.sv \
+        verilator -sv src/*.v src/*.sv test/tb.sv \
           --binary \
           --trace \
           --timing \
