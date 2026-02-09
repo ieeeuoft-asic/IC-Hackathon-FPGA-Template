@@ -28,7 +28,7 @@ jobs:
           --timing \
           -Mdir sim_out
         echo "------------------ Running testbench -------------------"
-        ./sim_out/Vtop | tee sim.log
+        ./sim_out/Vtb | tee sim.log
         echo "------------------- Test complete ----------------------"
 
     - name: Save waveform to repo
