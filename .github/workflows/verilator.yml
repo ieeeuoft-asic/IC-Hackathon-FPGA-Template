@@ -27,7 +27,6 @@ jobs:
           --trace \
           --timing \
           -Mdir sim_out
-        ./sim_out/Vtop | tee sim.log
         echo "------------------ Running testbench -------------------"
         ./sim_out/Vtop | tee sim.log
         echo "------------------- Test complete ----------------------"

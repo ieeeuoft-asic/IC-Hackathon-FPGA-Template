@@ -20,7 +20,7 @@ Go to your newly created repository and allow actions to create GitHub pages.
 
 ## Set up your Verilog/Systemverilog Project
 
-1. Add your verilog source files to the `/src`. A `top` wrapper for the DE1-SoC FPGA board is provided in the `/src` folder.
+1. Add your Verilog/Systemverilog source files to the `/src`. A  wrapper for the DE1-SoC FPGA board is provided at `/src/de1soc_wrapper.sv`. The top module in `/src` must be named `top`.
 
 2. Add your testbench to `/test/tb.sv`. The testbench module must be named `tb`. 
 
