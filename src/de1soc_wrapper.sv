@@ -8,6 +8,8 @@ module de1soc_wrapper (
     inout         PS2_CLK,
     inout         PS2_DAT,
 
+    output [6:0]  HEX5,
+    output [6:0]  HEX4,
     output [6:0]  HEX3,
     output [6:0]  HEX2,
     output [6:0]  HEX1,

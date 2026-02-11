@@ -26,6 +26,7 @@ jobs:
           --binary \
           --trace \
           --timing \
+          --assert \
           -Mdir sim_out
         echo "------------------ Running testbench -------------------"
         ./sim_out/Vtb | tee sim.log
