@@ -1,6 +1,11 @@
 # IC Hacks (FPGA Track) Template Guide
 This template provies an easy to use Verilog/SystemVerilog simulation workflow, managed entirely through github actions. 
 
+## Template Overview
+This repository serves as the official template for the **FPGA Track**. Participants should use this template to structure their Verilog/SystemVerilog projects and testbenches.
+
+When submitting your project, provide the link to your repository based on this template (see instructions below). This ensures that your simulation workflow, waveform generation, and GitHub Actions outputs work correctly.
+
 ### IMPORTANT NOTE
 Only modify the `/src` and the `/test` directories. **DO NOT** modify files in any other directory. Modifying other files **WILL** break the simulation workflow and may also lead to merge conflicts.
 
@@ -25,6 +30,15 @@ Go to your newly created repository and allow actions to create GitHub pages.
 1. Add your Verilog/Systemverilog source files to the `/src`. A  wrapper for the DE1-SoC FPGA board is provided at `/src/de1soc_wrapper.sv`. The top module name in `/src` must match the one instantiated in `tb.sv`.
 
 2. Add your testbench to `/test/tb.sv`. The testbench module must be named `tb`. 
+   
+    Every testbench must contain the following lines of code:
+    ```
+    initial begin
+        $dumpfile("sim_out/wave.vcd");
+        $dumpvars(0, tb);
+    end
+    ```
+    This is required to generate the waveforms.
 
 ## Expected Repository Structure
 ```
